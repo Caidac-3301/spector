@@ -1,0 +1,27 @@
+{
+  "name": "spector",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+  ],
+  "bugs": {
+    "url": "https://github.com/Caidac-3301/spector/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Caidac-3301/spector.git"
+  },
+  "author": {
+    "name": "Risabh Kumar",
+    "email": "rahulpsd18@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+  },
+  "dependencies": {
+  }
+}
