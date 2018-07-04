@@ -1,0 +1,59 @@
+env:
+  node: true
+  commonjs: true
+
+extends: eslint:recommended
+
+parser: typescript-eslint-parser
+
+parserOptions:
+  ecmaVersion: 2018
+  sourceType: module
+  ecmaFeatures:
+    modules: true
+
+# https://eslint.org/docs/rules/
+rules:
+  indent:
+    - error
+    - 4
+  semi:
+    - error
+    - always
+  no-console:
+    - warn
+    - allow: ["log"]
+  linebreak-style:
+    - error
+    - unix
+  sort-imports:
+    - error
+    - memberSyntaxSortOrder:
+      - all
+      - single
+      - multiple
+      - none
+  yoda: error
+  no-var: error
+  eqeqeq: error
+  no-eval: error
+  no-undef: off
+  eol-last: error
+  camelcase: warn
+  no-shadow: error
+  valid-jsdoc: warn
+  prefer-const: warn
+  default-case: error
+  spaced-comment: error
+  no-multi-spaces: error
+  no-empty-function: warn
+  no-useless-rename: error
+  symbol-description: error
+  no-trailing-spaces: error
+  no-unneeded-ternary: warn
+  prefer-object-spread: warn
+  no-use-before-define: error
+  switch-colon-spacing: error
+  no-useless-constructor: error
+  no-shadow-restricted-names: error
+  lines-between-class-members: error
