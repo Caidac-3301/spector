@@ -34,6 +34,10 @@ Spector will get all of the information from logs when they reach AWS CloudWatch
 ### Installation
 
 * Clone the repo: `git clone https://github.com/Caidac-3301/spector.git`
+    * The [wiki](https://github.com/Caidac-3301/spector/wiki) is made available in the repo as `docs/` with help of [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+    * Either pass `--recurse-submodules` flag with the above `git clone` command,
+    * Or run `git submodule init` and `git submodule update` separately after cloning
+    * This is optional, in case you don't need the docs.
 * Run `docker-compose up`
 * Visit http://localhost:3000/
 * Play with it
