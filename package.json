@@ -1,7 +1,7 @@
 {
   "name": "spector",
   "version": "0.0.0",
-  "description": "",
+  "description": "Log based AWS Lambda monitoring, tracing, error alerting and debugging",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
