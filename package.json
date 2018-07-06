@@ -8,7 +8,7 @@
     "lint": "eslint src --ext ts",
     "clean": "rm -rf ./node_modules && rm package-lock.json && echo Cleanup done",
     "compile": "tsc",
-    "start": "npm run compile && node dist/"
+    "start": "gulp copy; gulp watch & tsc-watch -p . --onSuccess \"node dist/\""
   },
   "keywords": [],
   "bugs": {
@@ -27,6 +27,7 @@
     "@types/express": "^4.16.0",
     "@types/node": "^10.5.1",
     "eslint": "^5.0.1",
+    "gulp": "^3.9.1",
     "typescript": "^2.9.2",
     "typescript-eslint-parser": "^16.0.1"
   },

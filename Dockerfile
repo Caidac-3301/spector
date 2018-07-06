@@ -5,7 +5,7 @@ RUN mkdir /app
 ENV SUBDIR=app
 ENV HOME=/home/$USER
 
-RUN npm install -g typescript
+RUN npm i -g typescript tsc-watch gulp-cli
 
 COPY package.json $HOME/$SUBDIR/
 
