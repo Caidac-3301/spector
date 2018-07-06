@@ -1,5 +1,9 @@
 dist
 node_modules
 
+# log files created by winston logger
+combined.log
+error.log
+
 .vscode
 .DS_Store
