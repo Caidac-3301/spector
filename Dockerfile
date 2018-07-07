@@ -3,9 +3,9 @@ FROM node:10.5-alpine
 RUN mkdir /app
 
 ENV SUBDIR=app
-ENV HOME=/home/$USER
+ENV HOME=/home
 
-RUN npm i -g typescript tsc-watch gulp-cli
+RUN npm i -g tsc-watch gulp-cli
 
 COPY package.json $HOME/$SUBDIR/
 

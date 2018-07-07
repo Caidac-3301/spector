@@ -5,9 +5,12 @@ services:
     build: .
     command: npm run start
     environment:
+      AWS_PROFILE: default      # change this to suit your need
+      AWS_REGION: us-east-1
       NODE_ENV: development
     ports:
       - '3000:3000'
     volumes:
       - .:/home/app
       - /home/app/node_modules
+      - ~/.aws:/home/.aws
