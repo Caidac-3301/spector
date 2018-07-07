@@ -17,6 +17,7 @@ if (app.get('env') !== 'production') {
                 message: err.message
             }
         });
+        next(err);
     });
 }
 

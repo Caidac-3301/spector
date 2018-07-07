@@ -1,7 +1,7 @@
 import { CloudWatchLogs, SharedIniFileCredentials } from 'aws-sdk';
-import { Request, Response } from "express";
-import logger from '../utils/logger';
+import { NextFunction, Request, Response, Router } from "express";
 
+const router = Router();
 const { AWS_REGION, AWS_PROFILE } = process.env;
 
 const cloudWatchLogs = new CloudWatchLogs({
@@ -9,12 +9,20 @@ const cloudWatchLogs = new CloudWatchLogs({
     region: AWS_REGION
 });
 
-export const describeLogGroups = async (req: Request, res: Response) => {
+const describeLogGroups = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = await cloudWatchLogs.describeLogGroups().promise();
-        console.log(data);
         res.json(data);
     } catch (error) {
-        logger.error(error)
+        next(error);
     }
 };
+
+
+/**
+ * Define `/fetch` routes here:
+ */
+
+router.get('/', describeLogGroups);
+
+export default router;
