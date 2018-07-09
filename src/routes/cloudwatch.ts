@@ -1,5 +1,5 @@
 import { CloudWatchLogs, SharedIniFileCredentials } from 'aws-sdk';
-import { NextFunction, Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from 'express';
 
 const router = Router();
 const { AWS_REGION, AWS_PROFILE } = process.env;
@@ -9,10 +9,23 @@ const cloudWatchLogs = new CloudWatchLogs({
     region: AWS_REGION
 });
 
-const describeLogGroups = async (req: Request, res: Response, next: NextFunction) => {
+const fetchLogGroups = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const data = await cloudWatchLogs.describeLogGroups().promise();
-        res.json(data);
+        const data: any[] = [];
+        const params: CloudWatchLogs.DescribeLogGroupsRequest = {
+            logGroupNamePrefix: '/aws/lambda/'
+        }
+        const paginationCalls = async () => {
+            const { logGroups = [], nextToken } = await cloudWatchLogs.describeLogGroups(params).promise();
+            logGroups.forEach(log => data.push(log as any));
+            if (nextToken) {
+                params.nextToken = nextToken;
+                await paginationCalls();
+            };
+        };
+        await paginationCalls();
+
+        res.json({ success: true, message: `${data.length} entries found and updated in Database` });
     } catch (error) {
         next(error);
     }
@@ -23,6 +36,6 @@ const describeLogGroups = async (req: Request, res: Response, next: NextFunction
  * Define `/fetch` routes here:
  */
 
-router.get('/', describeLogGroups);
+router.get('/', fetchLogGroups);
 
 export default router;

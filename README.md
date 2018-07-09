@@ -1,4 +1,6 @@
-# Spector
+<p align="center">
+    <img width="500" alt="Spector" src="src/public/assets/images/brand.png">
+</p>
 
 Open source alternative to monitor, debug and improve your Lambda Functions.
 

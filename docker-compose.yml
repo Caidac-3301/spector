@@ -12,5 +12,5 @@ services:
       - '3000:3000'
     volumes:
       - .:/home/app
-      - /home/app/node_modules
+      - ./node_modules:/home/app/node_modules
       - ~/.aws:/home/.aws

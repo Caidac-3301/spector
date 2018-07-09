@@ -1,25 +1,25 @@
 const gulp = require('gulp');
+const watch = require('gulp-watch');
 
 const settings = {
     copy: {
-        files: ['app/**/*.html']
+        files: ['src/views/**/*', 'src/public/**/*']
     },
     watch: {
-        files: ['app/**/*.html']
+        files: ['src/views/**/*', 'src/public/**/*']
     },
     base: './'
 };
 
 gulp.task('copy', function () {
-    return gulp.src(settings.copy.files)
-        .pipe(gulp.dest('dist'));
+    console.log('Running gulp copy');
+    return gulp.src(settings.copy.files, {base: './src/'})
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('watch', function () {
-    return gulp.watch(settings.watch.files, function (obj) {
-        if (obj.type === 'changed') {
-            gulp.src(obj.path)
-                .pipe(gulp.dest('dist'));
-        }
-    });
+    console.log('Running gulp watch');
+    return gulp.src(settings.watch.files, {base: './src/'})
+        .pipe(watch(settings.watch.files, {base: './src/'}))
+        .pipe(gulp.dest('dist/'));
 });
