@@ -1,7 +1,7 @@
 import { CloudWatchLogs } from 'aws-sdk';
 import { NextFunction, Request, Response, Router } from 'express';
-import { ESClient } from '../index';
-import { validAwsConfig } from '../config/aws';
+import { ESClient } from '..';
+import { validAwsConfig } from '../utils/aws';
 
 const router = Router();
 

@@ -1,22 +1,31 @@
-<form action="/settings" method="delete" class="card">
+<form class="card">
   <div class="card-header">
     <h3 class="card-title">Saved Configuration</h3>
   </div>
   <div class="card-body">
     <div class="form-group">
       <label class="form-label">Access Key Id</label>
-      <input type="text" class="form-control" name="accessKeyId" value={{ data.accessKeyId }} disabled>
+      <input type="text" class="form-control" name="accessKeyId" disabled value={{ data.accessKeyId }}>
     </div>
     <div class="form-group">
       <label class="form-label">Secret Access Key</label>
-      <input type="text" class="form-control" name="secretAccessKey" value={{ data.secretAccessKey }} disabled>
+      <input type="text" class="form-control" name="secretAccessKey" disabled value={{ data.secretAccessKey }}>
     </div>
     <div class="form-group">
       <label class="form-label">Region</label>
-      <input type="text" class="form-control" name="secretAccessKey" value={{ data.region }} disabled>
+      <input type="text" class="form-control" name="secretAccessKey" disabled value={{ data.region }}>
     </div>
     <div class="d-flex">
-      <button type="submit" class="btn btn-danger ml-auto">Delete</button>
+      <button onclick="deleteAWSConfig()" class="btn btn-danger ml-auto">Delete</button>
     </div>
   </div>
 </form>
+<script>
+  function deleteAWSConfig() {
+    return fetch('/settings', {
+      method: 'delete'
+    }).then(response => {
+      window.location = response.url;
+    });
+  }
+</script>
