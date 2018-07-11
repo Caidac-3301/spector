@@ -181,12 +181,54 @@
           </div>
         </div>
       </div>
-      <div class="my-3 my-md-5">
-      </div>
 
+      {{#if sidebar}}
+      <div class="my-3 my-md-5">
+        <div class="container">
+          <div class="page-header">
+            <h1 class="page-title">
+              {{pageTitle}}
+            </h1>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 order-lg-1 mb-4">
+              {{!--
+              <a href="https://github.com/tabler/tabler" class="btn btn-block btn-primary mb-6">
+                <i class="fe fe-github mr-2"></i>Browse source code
+              </a> --}}
+              <!-- Getting started -->
+              <div class="list-group list-group-transparent mb-0">
+                <a href="#" class="list-group-item list-group-item-action active">
+                  <span class="icon mr-3">
+                    <i class="fe fe-shield"></i>
+                  </span>Credentials</a>
+              </div>
+              <!-- Components -->
+              <div class="list-group list-group-transparent mb-0">
+                <a href="#" class="list-group-item list-group-item-action">
+                  <span class="icon mr-3">
+                    <i class="fe fe-zap"></i>
+                  </span>Functions</a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  <span class="icon mr-3">
+                    <i class="fe fe-alert-circle"></i>
+                  </span>Alerts</a>
+              </div>
+              <div class="d-none d-lg-block mt-6">
+                <a href="https://github.com/Caidac-3301/spector/issues/" class="text-muted" target="__blank">Report an issue</a>
+              </div>
+            </div>
+            <div class="col-lg-9">
+              {{{ body }}}
+            </div>
+          </div>
+        </div>
+      </div>
+      {{else}}
       <div class="container">
         {{{ body }}}
       </div>
+      {{/if}}
 
     </div>
 

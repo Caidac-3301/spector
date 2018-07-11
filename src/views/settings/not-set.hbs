@@ -1,16 +1,26 @@
 {{#if error}}
-<div class="alert alert-icon alert-danger alert-dismissible" role="alert">
+<div class="mt-4 alert alert-icon alert-danger alert-dismissible col-md-6 offset-md-3" role="alert">
+  <button type="button" class="close" data-dismiss="alert"></button>
   <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i> {{ error }}
 </div>
 {{/if}}
-<form action="/settings" method="post" class="card">
+<form action="/settings" method="post" class="mt-4 card col-md-6 offset-md-3">
   <div class="card-header">
-    <h3 class="card-title">No Configuration Found</h3>
+    <h3 class="card-title">Configure</h3>
   </div>
   <div class="card-body">
     <div class="form-group">
       <label class="form-label">Master Password</label>
-      <input type="text" class="form-control" name="masterPassword" placeholder="Set a Master Password" required>
+      <div class="row gutters-xs">
+        <div class="col">
+          <input type="password" id="pwd-input" class="form-control" name="masterPassword" placeholder="Set a Master Password" required autofocus>
+        </div>
+        <span class="col-auto">
+          <button class="btn btn-secondary" type="button" onclick="togglePassword()">
+            <i class="fe fe-eye" id="pwd-icon"></i>
+          </button>
+        </span>
+      </div>
     </div>
     <div class="form-group">
       <label class="form-label">Access Key Id</label>
@@ -44,7 +54,21 @@
       </select>
     </div>
     <div class="d-flex">
-      <button type="submit" class="btn btn-primary ml-auto">Update</button>
+      <button id="update" type="submit" class="btn btn-primary ml-auto">Update</button>
     </div>
   </div>
 </form>
+
+<script>
+  function togglePassword() {
+    if (document.getElementById("pwd-icon").classList.contains('fe-eye')) {
+      document.getElementById("pwd-icon").classList.remove('fe-eye');
+      document.getElementById("pwd-icon").classList.add('fe-eye-off');
+      document.getElementById("pwd-input").type = "text";
+    } else {
+      document.getElementById("pwd-icon").classList.remove('fe-eye-off');
+      document.getElementById("pwd-icon").classList.add('fe-eye');
+      document.getElementById("pwd-input").type = "password";
+    }
+  }
+</script>

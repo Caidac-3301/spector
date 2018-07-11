@@ -1,6 +1,9 @@
 <form class="card">
   <div class="card-header">
-    <h3 class="card-title">Saved Configuration</h3>
+    <h3 class="card-title">Credentials</h3>
+    <div class="card-options">
+      <button type="button" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-outline-danger btn-pill ml-auto">Delete</button>
+    </div>
   </div>
   <div class="card-body">
     <div class="form-group">
@@ -15,11 +18,30 @@
       <label class="form-label">Region</label>
       <input type="text" class="form-control" name="secretAccessKey" disabled value={{ data.region }}>
     </div>
-    <div class="d-flex">
-      <button onclick="deleteAWSConfig()" class="btn btn-danger ml-auto">Delete</button>
-    </div>
   </div>
 </form>
+
+<!-- Modal for Confirmation -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" />
+      </div>
+      <div class="modal-body">
+        Spector will clear all the data if credentials are removed. <br>
+        Please make sure you know exactly what you are doing. <br>
+        You won't be able to undo this action. <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" onclick="deleteAWSConfig()" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   function deleteAWSConfig() {
     return fetch('/settings', {

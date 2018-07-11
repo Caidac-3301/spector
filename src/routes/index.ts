@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import settingsRoutes from './settings';
 import cloudWatchRoutes from './cloudwatch';
+import settingsRoutes from './settings';
 
 const router = Router();
 
 router.use('/fetch', cloudWatchRoutes);
-router.use('/settings', settingsRoutes)
+router.use('/settings', settingsRoutes);
 
 export default router;

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Client } from 'elasticsearch';
 import app from './app';
 import logger from './utils/logger';

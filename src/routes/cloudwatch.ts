@@ -1,29 +1,26 @@
 import { CloudWatchLogs } from 'aws-sdk';
 import { NextFunction, Request, Response, Router } from 'express';
 import { ESClient } from '..';
-import { validAwsConfig } from '../utils/aws';
+import { isConfigured } from '../middlewares';
 
 const router = Router();
 
 const fetchLogGroups = async (req: Request, res: Response, next: NextFunction) => {
-    if (!validAwsConfig()) {
-        res.redirect('/settings');
-    }
     try {
         const cloudWatchLogs = new CloudWatchLogs();
         res.writeHead(200, {
             'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive'
-        })
+        });
 
         const params: CloudWatchLogs.DescribeLogGroupsRequest = {
             logGroupNamePrefix: '/aws/lambda/'
-        }
+        };
         const start = new Date().getTime();
         const paginationCalls = async () => {
             const { logGroups = [], nextToken } = await cloudWatchLogs.describeLogGroups(params).promise();
-            for (let log of logGroups) {
+            for (const log of logGroups) {
                 const bleachedName = log.logGroupName && log.logGroupName.split('/').pop() || '';
                 res.write(`${bleachedName} created\n`);
                 await ESClient.create({
@@ -42,7 +39,7 @@ const fetchLogGroups = async (req: Request, res: Response, next: NextFunction) =
             if (nextToken) {
                 params.nextToken = nextToken;
                 await paginationCalls();
-            };
+            }
         };
         await paginationCalls();
 
@@ -59,6 +56,6 @@ const fetchLogGroups = async (req: Request, res: Response, next: NextFunction) =
  * Define `/fetch` routes here:
  */
 
-router.get('/', fetchLogGroups);
+router.get('/', isConfigured, fetchLogGroups);
 
 export default router;

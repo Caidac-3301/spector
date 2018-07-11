@@ -7,7 +7,6 @@ import router from './routes';
 
 type Request = express.Request;
 type Response = express.Response;
-type NextFunction = express.NextFunction;
 
 // Create Express server
 const app = express();
@@ -26,15 +25,15 @@ app.set('port', process.env.PORT || 3000);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(router)
+app.use(router);
 
-app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // ping
 app.get('/', (req: Request, res: Response) => {
     res.render('index', { title: 'Home' });
 });
-app.get('/ping', (req: Request, res: Response, next: NextFunction) => {
+app.get('/ping', (req: Request, res: Response) => {
     logger.info(`Ping received successfully at ${new Date()}`);
     res.send('Pong');
 });
