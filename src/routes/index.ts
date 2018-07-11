@@ -31,7 +31,7 @@ router.get('/settings', async (req: Request, res: Response, next: NextFunction) 
         } else if (alreadyConfigured) {
             // Already Configured but not yet locally usable, decrypt it
             console.log('>> NOT VALID BUT SAVED. DECRYPTING NOW.');
-            res.redirect('/settings/decrypt');
+            res.render('settings/configured', { title: 'Settings' });
         } else {
             // Yet to be set by User
             // Make sure to encrypt with a User Provided Master Password
@@ -46,17 +46,26 @@ router.get('/settings', async (req: Request, res: Response, next: NextFunction) 
 
 router.post('/settings', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await ESClient.create({
-            index: 'metadata',
-            type: 'configurations',
-            id: 'aws',
-            body: {
-                accessKeyId: encrypt(req.body.accessKeyId),
-                secretAccessKey: encrypt(req.body.secretAccessKey),
-                region: req.body.region
-            }
-        });
-        res.redirect('/settings');
+
+        // COPY-PASTA from L#99
+        const accessKeyIdRegex = /(?<![A-Z0-9])[A-Z0-9]{20}(?![A-Z0-9])/;
+        const secretAccessKeyRegex = /(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])/;
+
+        if (accessKeyIdRegex.test(req.body.accessKeyId) && secretAccessKeyRegex.test(req.body.secretAccessKey)) {
+            await ESClient.create({
+                index: 'metadata',
+                type: 'configurations',
+                id: 'aws',
+                body: {
+                    accessKeyId: encrypt(req.body.accessKeyId, req.body.masterPassword),
+                    secretAccessKey: encrypt(req.body.secretAccessKey, req.body.masterPassword),
+                    region: req.body.region
+                }
+            });
+            res.redirect('/settings');
+        } else {
+            res.render('settings/not-set', { title: 'Settings', error: 'The credentials do not match the AWS credential type. Please enter valid credentials.' });
+        }
     } catch (err) {
         logger.error({ message: err.message, stack: err.stack });
         next(err)
@@ -78,7 +87,11 @@ router.delete('/settings', async (req: Request, res: Response, next: NextFunctio
     }
 });
 
-router.get('/settings/decrypt', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/settings/decrypt', (req: Request, res: Response) => {
+    res.redirect('/settings');
+});
+
+router.post('/settings/decrypt', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const config = await ESClient.get<IAWSUserConfig>({
             index: 'metadata',
@@ -86,13 +99,25 @@ router.get('/settings/decrypt', async (req: Request, res: Response, next: NextFu
             id: 'aws'
         });
 
-        // TODO: only update after verifying master password and decrypting
-        AWSConfig.update({
-            accessKeyId: decrypt(config._source.accessKeyId),
-            secretAccessKey: decrypt(config._source.secretAccessKey),
-            region: config._source.region,
-        })
-        res.redirect('/settings');
+        // Decrypting using the sent password, but not sure if true
+        const accessKeyId = decrypt(config._source.accessKeyId, req.body.masterPassword);
+        const secretAccessKey = decrypt(config._source.secretAccessKey, req.body.masterPassword);
+
+        // Verifying decrypted keys with regex
+        // from https://aws.amazon.com/blogs/security/a-safer-way-to-distribute-aws-credentials-to-ec2/
+        const accessKeyIdRegex = /(?<![A-Z0-9])[A-Z0-9]{20}(?![A-Z0-9])/;
+        const secretAccessKeyRegex = /(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])/;
+
+        if (accessKeyIdRegex.test(accessKeyId) && secretAccessKeyRegex.test(secretAccessKey)) {
+            AWSConfig.update({
+                accessKeyId: decrypt(config._source.accessKeyId, req.body.masterPassword),
+                secretAccessKey: decrypt(config._source.secretAccessKey, req.body.masterPassword),
+                region: config._source.region,
+            })
+            res.redirect('/settings');
+        } else {
+            res.render('settings/configured', { title: 'Settings', error: 'Invalid Password. Please try again.' });
+        }
     } catch (err) {
         logger.error({ message: err.message, stack: err.stack });
         next(err)

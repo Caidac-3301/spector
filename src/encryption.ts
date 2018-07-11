@@ -1,27 +1,25 @@
-import * as crypto from 'crypto';
+import { randomBytes, createCipheriv, createHash, createDecipheriv } from 'crypto';
 
-// To be later implemented with Master Password
-const ENCRYPTION_KEY = 'XXhardXcodedXvalueXforXdemoXhere';
-const IV_LENGTH = 16; // For AES, this is always 16
+const ALGORITHM = 'aes-256-ctr';
+const IV_LENGTH = 16;
 
-export const encrypt = (text: string) => {
-  let iv = crypto.randomBytes(IV_LENGTH);
-  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
-  let encrypted = cipher.update(text);
+export const encrypt = (text: string, password: string) => {
+  const hash = createHash('sha1');
+  const iv = randomBytes(IV_LENGTH);
+  const key = hash.update(password).digest('hex').toString().slice(0, 32);
+  const cipher = createCipheriv(ALGORITHM, key, iv)
+  const crypted = cipher.update(text, 'utf8', 'hex')
 
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-
-  return iv.toString('hex') + ':' + encrypted.toString('hex');
+  return iv.toString('hex') + ':' + crypted.toString();
 }
 
-export const decrypt = (text: string) => {
-  let textParts = text.split(':');
-  let iv = Buffer.from(textParts.shift() as string, 'hex');
-  let encryptedText = Buffer.from(textParts.join(':'), 'hex');
-  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
-  let decrypted = decipher.update(encryptedText);
+export const decrypt = (text: string, password: string) => {
+  const hash = createHash('sha1');
+  const key = hash.update(password).digest('hex').toString().slice(0, 32);
+  const [iv_str, encrypted] = text.split(':');
+  const iv = Buffer.from(iv_str, 'hex');
+  const decipher = createDecipheriv(ALGORITHM, key, iv)
+  const dec = decipher.update(encrypted, 'hex', 'utf8');
 
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-
-  return decrypted.toString();
+  return dec;
 }
