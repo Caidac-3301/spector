@@ -1,0 +1,22 @@
+<form action="/settings" method="delete" class="card">
+  <div class="card-header">
+    <h3 class="card-title">Saved Configuration</h3>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <label class="form-label">Access Key Id</label>
+      <input type="text" class="form-control" name="accessKeyId" value={{ data.accessKeyId }} disabled>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Secret Access Key</label>
+      <input type="text" class="form-control" name="secretAccessKey" value={{ data.secretAccessKey }} disabled>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Region</label>
+      <input type="text" class="form-control" name="secretAccessKey" value={{ data.region }} disabled>
+    </div>
+    <div class="d-flex">
+      <button type="submit" class="btn btn-danger ml-auto">Delete</button>
+    </div>
+  </div>
+</form>

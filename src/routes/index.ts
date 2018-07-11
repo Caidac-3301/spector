@@ -1,4 +1,4 @@
-import * as AWS from 'aws-sdk';
+import { config as AWSConfig } from 'aws-sdk';
 import { Router, Request, Response, NextFunction } from 'express';
 import cloudWatchRoutes from './cloudwatch';
 import { validAwsConfig, IAWSUserConfig } from '../config/aws';
@@ -23,11 +23,11 @@ router.get('/settings', async (req: Request, res: Response, next: NextFunction) 
             // Valid AWS configuration
             console.log('>> VALID');
             const data = {
-                accessKeyId: AWS.config && AWS.config.credentials && AWS.config.credentials.accessKeyId.substr(0,5).padEnd(20, '•'),
+                accessKeyId: AWSConfig && AWSConfig.credentials && AWSConfig.credentials.accessKeyId.substr(0,5).padEnd(20, '•'),
                 secretAccessKey: ''.padEnd(40, '•'),
-                region: AWS.config.region
+                region: AWSConfig.region
             }
-            res.render('settings', { validConfig, title: 'Settings', data });
+            res.render('settings/available', { title: 'Settings', data });
         } else if (alreadyConfigured) {
             // Already Configured but not yet locally usable, decrypt it
             console.log('>> NOT VALID BUT SAVED. DECRYPTING NOW.');
@@ -36,7 +36,7 @@ router.get('/settings', async (req: Request, res: Response, next: NextFunction) 
             // Yet to be set by User
             // Make sure to encrypt with a User Provided Master Password
             console.log('>> NOT SET.');
-            res.render('settings', { title: 'Settings' });
+            res.render('settings/not-set', { title: 'Settings' });
         }
     } catch (err) {
         logger.error({ message: err.message, stack: err.stack });
@@ -87,7 +87,7 @@ router.get('/settings/decrypt', async (req: Request, res: Response, next: NextFu
         });
 
         // TODO: only update after verifying master password and decrypting
-        AWS.config.update({
+        AWSConfig.update({
             accessKeyId: decrypt(config._source.accessKeyId),
             secretAccessKey: decrypt(config._source.secretAccessKey),
             region: config._source.region,

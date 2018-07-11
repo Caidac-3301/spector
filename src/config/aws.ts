@@ -1,4 +1,4 @@
-import * as AWS from 'aws-sdk';
+import { config as AWSConfig } from 'aws-sdk';
 
 export interface IAWSUserConfig {
     accessKeyId: string;
@@ -7,5 +7,5 @@ export interface IAWSUserConfig {
 }
 
 export const validAwsConfig = () => {
-    return !!AWS.config.credentials && !!AWS.config.region;
+    return !!AWSConfig.credentials && !!AWSConfig.region;
 }

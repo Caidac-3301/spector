@@ -1,0 +1,41 @@
+<form action="/settings" method="post" class="card">
+  <div class="card-header">
+    <h3 class="card-title">No Configuration Found</h3>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <label class="form-label">Access Key Id</label>
+      <input type="text" class="form-control" name="accessKeyId" placeholder="Access Key Id" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Secret Access Key</label>
+      <input type="text" class="form-control" name="secretAccessKey" placeholder="Secret Access Key" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Region</label>
+      <select name="region" class="form-control custom-select" required>
+        <option value="us-east-1">us-east-1 :: US East (N. Virginia)</option>
+        <option value="us-east-2">us-east-2 :: US East (Ohio)</option>
+        <option value="us-west-1">us-west-1 :: US West (N. California)</option>
+        <option value="us-west-2">us-west-2 :: US West (Oregon)</option>
+        <option value="eu-west-1">eu-west-1 :: EU (Ireland)</option>
+        <option value="eu-west-2">eu-west-2 :: EU (London)</option>
+        <option value="eu-west-3">eu-west-3 :: EU (Paris)</option>
+        <option value="sa-east-1">sa-east-1 :: South America (São Paulo)</option>
+        <option value="eu-central-1">eu-central-1 :: EU (Frankfurt)</option>
+        <option value="ca-central-1">ca-central-1 :: Canada (Central)</option>
+        <option value="ap-south-1">ap-south-1 :: Asia Pacific (Mumbai)</option>
+        <option value="ap-northeast-1">ap-northeast-1 :: Asia Pacific (Tokyo)</option>
+        <option value="ap-northeast-2">ap-northeast-2 :: Asia Pacific (Seoul)</option>
+        <option value="ap-northeast-3">ap-northeast-3 :: Asia Pacific (Osaka-Local)</option>
+        <option value="ap-southeast-1">ap-southeast-1 :: Asia Pacific (Singapore)</option>
+        <option value="ap-southeast-2">ap-southeast-2 :: Asia Pacific (Sydney)</option>
+        <option value="cn-north-1">cn-north-1 :: China (Beijing)</option>
+        <option value="cn-northwest-1">cn-northwest-1 :: China (Ningxia)</option>
+      </select>
+    </div>
+    <div class="d-flex">
+      <button type="submit" class="btn btn-primary ml-auto">Update</button>
+    </div>
+  </div>
+</form>
