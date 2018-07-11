@@ -7,6 +7,7 @@ import router from './routes';
 
 type Request = express.Request;
 type Response = express.Response;
+type NextFunction = express.NextFunction;
 
 // Create Express server
 const app = express();
@@ -31,9 +32,9 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 
 // ping
 app.get('/', (req: Request, res: Response) => {
-    res.render('index', {title: 'Home'});
+    res.render('index', { title: 'Home' });
 });
-app.get('/ping', (req: Request, res: Response) => {
+app.get('/ping', (req: Request, res: Response, next: NextFunction) => {
     logger.info(`Ping received successfully at ${new Date()}`);
     res.send('Pong');
 });

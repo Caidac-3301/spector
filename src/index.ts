@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Client } from 'elasticsearch';
 import app from './app';
 import logger from './utils/logger';
 
@@ -21,10 +22,20 @@ if (app.get('env') !== 'production') {
     });
 }
 
+export const ESClient = new Client({
+    host: 'url-of-elasticsearch-instance-here'
+});
+
 // Start Express server.
-const server = app.listen(app.get('port'), () => {
-    console.log(`App is running at http://localhost:${app.get('port')} in ${app.get('env')} mode`);
-    console.log(`Press CTRL-C to stop\n`);
+const server = app.listen(app.get('port'), async () => {
+    try {
+        await ESClient.ping({});
+        console.log(`\nAll is well`);
+        console.log(`App is running at http://localhost:${app.get('port')} in ${app.get('env')} mode`);
+        console.log(`Press CTRL-C to stop\n`);
+    } catch (err) {
+        logger.error({ message: err.message, stack: err.stack });
+    }
 });
 
 export default server;

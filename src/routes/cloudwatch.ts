@@ -1,23 +1,44 @@
-import { CloudWatchLogs, SharedIniFileCredentials } from 'aws-sdk';
+import { CloudWatchLogs } from 'aws-sdk';
 import { NextFunction, Request, Response, Router } from 'express';
+import { ESClient } from '../index';
+import { validAwsConfig } from '../config/aws';
 
 const router = Router();
-const { AWS_REGION, AWS_PROFILE } = process.env;
-
-const cloudWatchLogs = new CloudWatchLogs({
-    credentials: new SharedIniFileCredentials({ profile: AWS_PROFILE }),
-    region: AWS_REGION
-});
 
 const fetchLogGroups = async (req: Request, res: Response, next: NextFunction) => {
+    if (!validAwsConfig()) {
+        res.redirect('/settings');
+    }
     try {
-        const data: any[] = [];
+        const cloudWatchLogs = new CloudWatchLogs();
+        res.writeHead(200, {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive'
+        })
+
         const params: CloudWatchLogs.DescribeLogGroupsRequest = {
             logGroupNamePrefix: '/aws/lambda/'
         }
+        const start = new Date().getTime();
         const paginationCalls = async () => {
             const { logGroups = [], nextToken } = await cloudWatchLogs.describeLogGroups(params).promise();
-            logGroups.forEach(log => data.push(log as any));
+            for (let log of logGroups) {
+                const bleachedName = log.logGroupName && log.logGroupName.split('/').pop() || '';
+                res.write(`${bleachedName} created\n`);
+                await ESClient.create({
+                    index: bleachedName.toLowerCase(),
+                    type: '_doc',
+                    id: bleachedName,
+                    body: {
+                        arn: log.arn,
+                        logGroupName: log.logGroupName,
+                        storedBytes: log.storedBytes,
+                        creationTime: log.creationTime,
+                        metricFilterCount: log.metricFilterCount,
+                    }
+                });
+            }
             if (nextToken) {
                 params.nextToken = nextToken;
                 await paginationCalls();
@@ -25,7 +46,9 @@ const fetchLogGroups = async (req: Request, res: Response, next: NextFunction) =
         };
         await paginationCalls();
 
-        res.json({ success: true, message: `${data.length} entries found and updated in Database` });
+        const end = new Date().getTime();
+        res.write(`Fetching Completed in ${(end - start) / 1000} secs (${(end - start) / 60000} mins).\n`);
+        res.end();
     } catch (error) {
         next(error);
     }

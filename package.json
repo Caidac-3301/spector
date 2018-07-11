@@ -8,7 +8,8 @@
     "lint": "eslint src --ext ts",
     "clean": "rm -rf ./node_modules && rm package-lock.json && echo Cleanup done",
     "compile": "tsc",
-    "start": "gulp copy; gulp watch & tsc-watch -p . --onSuccess \"node dist/\""
+    "start": "gulp copy; gulp watch & tsc-watch -p . --onSuccess \"node dist/\"",
+    "watch": "tsc-watch -p . --onSuccess \"ts-node src/\""
   },
   "keywords": [],
   "bugs": {
@@ -33,6 +34,8 @@
     "eslint": "^5.0.1",
     "gulp": "^4.0.0",
     "gulp-watch": "^5.0.0",
+    "ts-node": "^7.0.0",
+    "tsc-watch": "^1.0.22",
     "typescript": "^2.9.2",
     "typescript-eslint-parser": "^16.0.1"
   },
