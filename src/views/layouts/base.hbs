@@ -49,6 +49,9 @@
             </a>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="nav-item d-none d-md-flex">
+                <button id="fullscreen-btn" type="button" onclick="toggleFullScreen()" class="btn btn-icon btn-link" style="text-decoration: none; cursor:zoom-in;" title="Full Screen" data-toggle="tooltip"><i id="fullscreen-icon" class="fe fe-maximize"></i></button>
+              </div>
+              <div class="nav-item d-none d-md-flex">
                 <a href="https://github.com/Caidac-3301/spector" class="btn btn-sm btn-outline-primary" target="_blank">Source code</a>
               </div>
               <div class="dropdown d-none d-md-flex">
@@ -264,5 +267,37 @@
 
   </div>
 </body>
-
+<script>
+  function toggleFullScreen(elem) {
+      elem = elem || document.documentElement;
+      if (!document.fullscreenElement && !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        document.getElementById("fullscreen-btn").style.cursor = 'zoom-out';
+        document.getElementById("fullscreen-icon").classList.remove('fe-maximize');
+        document.getElementById("fullscreen-icon").classList.add('fe-minimize');
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+          elem.msRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+      } else {
+        document.getElementById("fullscreen-btn").style.cursor = 'zoom-in';
+        document.getElementById("fullscreen-icon").classList.add('fe-maximize');
+        document.getElementById("fullscreen-icon").classList.remove('fe-minimize');
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+</script>
 </html>
